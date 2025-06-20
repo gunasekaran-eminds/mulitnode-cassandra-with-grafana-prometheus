@@ -1,0 +1,91 @@
+startDelaySeconds: 0
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+rules:
+  # Cassandra core metrics
+  - pattern: 'org.apache.cassandra.metrics<type=(\w+), name=(\w+)><>(Count|Value)'
+    name: cassandra_$1_$2
+    type: GAUGE
+    labels:
+      type: "$1"
+      name: "$2"
+
+  # JVM Heap Memory
+  - pattern: 'java.lang:type=Memory'
+    name: jvm_memory_used_bytes
+    type: GAUGE
+    attrNameSnakeCase: true
+    labels:
+      area: heap
+    value: attr.HeapMemoryUsage.used
+
+  # JVM Non-Heap Memory
+  - pattern: 'java.lang:type=Memory'
+    name: jvm_memory_nonheap_used_bytes
+    type: GAUGE
+    attrNameSnakeCase: true
+    labels:
+      area: non_heap
+    value: attr.NonHeapMemoryUsage.used
+
+  # JVM GC stats
+  - pattern: 'java.lang:type=GarbageCollector,name=(.+)'
+    name: jvm_gc_collection_seconds_count
+    type: COUNTER
+    labels:
+      gc_collector: "$1"
+    attrNameSnakeCase: true
+    value: attr.CollectionCount
+
+  - pattern: 'java.lang:type=GarbageCollector,name=(.+)'
+    name: jvm_gc_collection_seconds_sum
+    type: COUNTER
+    labels:
+      gc_collector: "$1"
+    attrNameSnakeCase: true
+    value: attr.CollectionTime
+
+  # JVM Thread count
+  - pattern: 'java.lang:type=Threading'
+    name: jvm_threads_count
+    type: GAUGE
+    attrNameSnakeCase: true
+    value: attr.ThreadCount
+
+  - pattern: 'java.lang:type=Threading'
+    name: jvm_threads_daemon
+    type: GAUGE
+    attrNameSnakeCase: true
+    value: attr.DaemonThreadCount
+
+  # JVM CPU load
+  - pattern: 'java.lang:type=OperatingSystem'
+    name: jvm_process_cpu_load
+    type: GAUGE
+    attrNameSnakeCase: true
+    value: attr.ProcessCpuLoad
+
+  - pattern: 'java.lang:type=OperatingSystem'
+    name: jvm_system_cpu_load
+    type: GAUGE
+    attrNameSnakeCase: true
+    value: attr.SystemCpuLoad
+
+  # JVM Class loading
+  - pattern: 'java.lang:type=ClassLoading'
+    name: jvm_classes_loaded
+    type: GAUGE
+    attrNameSnakeCase: true
+    value: attr.LoadedClassCount
+
+  - pattern: 'java.lang:type=ClassLoading'
+    name: jvm_classes_total_loaded
+    type: COUNTER
+    attrNameSnakeCase: true
+    value: attr.TotalLoadedClassCount
+
+  - pattern: 'java.lang:type=ClassLoading'
+    name: jvm_classes_unloaded
+    type: COUNTER
+    attrNameSnakeCase: true
+    value: attr.UnloadedClassCount

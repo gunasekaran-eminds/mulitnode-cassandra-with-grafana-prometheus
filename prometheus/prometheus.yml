@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'cassandra1'
+    static_configs:
+      - targets: ['cassandra1:7070']
+
+  - job_name: 'cassandra2'
+    static_configs:
+      - targets: ['cassandra2:7070']
+
+  - job_name: 'cassandra3'
+    static_configs:
+      - targets: ['cassandra3:7070']
